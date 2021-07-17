@@ -16,5 +16,21 @@ CHIP PC {
     OUT out[16];
 
     PARTS:
-    // Put your code here:
+    // Copied from https://github.com/jcoglan/nand2tetris/blob/master/projects/03/a/PC.hdl
+
+    // Increments current value by 1
+    Inc16(in=feedback, out=incout);
+
+    // If inc == 1, out == Inc16 out value else == current value (feedback)
+    Mux16(a=feedback, b=incout, sel=inc, out=m1);
+
+    // Choose the value between the current value (m1) or a new value inserted (in)
+    Mux16(a=m1, b=in, sel=load, out=m2);
+
+    // Reset the value to zero (false) if reset == 1 else out == current value (m2)
+    Mux16(a=m2, b=false, sel=reset, out=m3);
+
+    // Register current value
+    Register(in=m3, load=true, out=feedback, out=out);
+    
 }
